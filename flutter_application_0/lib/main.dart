@@ -63,7 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              "并创建自己的页面，使用小工具自定义它们",
+              "并创建自己的表情搭配，使用小工具自定义它们",
               style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
               textAlign: TextAlign.center,
             ),
