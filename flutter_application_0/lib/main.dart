@@ -11,11 +11,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Fluttermoji Demo',
+      title: '头像设置',
       debugShowCheckedModeBanner: false,
       theme: ThemeData.light(),
       // darkTheme: ThemeData.dark(),
-      home: MyHomePage(title: 'Fluttermoji'),
+      home: MyHomePage(title: 'Flutter表情'),
     );
   }
 }
