@@ -1,45 +1,21 @@
-# Dart samples
+A simple Dart HTTP server using [package:shelf](https://pub.dev/packages/shelf).
 
-[![CI](https://github.com/dart-lang/samples/workflows/Dart%20CI/badge.svg)](https://github.com/dart-lang/samples/actions?query=branch%3Amain)
+- Listens on "any IP" (0.0.0.0) instead of loop-back (localhost, 127.0.0.1) to
+  allow remote connections.
+- Defaults to listening on port `8080`, but this can be configured by setting
+  the `PORT` environment variable. (This is also the convention used by
+  [Cloud Run](https://cloud.google.com/run).)
+- Includes `Dockerfile` for easy containerization
 
-A collection of [Dart][dart] programs that illustrate features and best
-practices. For a list of community-maintained projects, see [Awesome
-Dart][awesome-dart].
+To run this server locally, run as follows:
 
-## Index
+```bash
+$ dart run bin/server.dart
+```
 
-- [command_line](https://github.com/dart-lang/samples/tree/main/command_line) -
-  A command line app that parses command-line options and fetches from GitHub.
-- [extension_methods](https://github.com/dart-lang/samples/tree/main/extension_methods) -
-  A set of samples that demonstrates the extension methods syntax and shows some
-  common use cases of the feature.
-- [null_safety/calculate_lix](https://github.com/dart-lang/samples/tree/main/null_safety/calculate_lix) -
-  A sample app that calculates the 'lix' readability index with an
-  implementation that uses the tech preview of Dart's new null safety feature.
-- [ffi](https://github.com/dart-lang/samples/tree/main/ffi) - A series of
-  simple examples demonstrating how to call C libraries from Dart.
-- [isolates](https://github.com/dart-lang/samples/tree/main/isolates) - Command line
-  applications that demonstrate how to work with Concurrency in Dart using isolates.
-  The examples read and parse JSON content in a worker isolate, and return the result to
-  the main isolate.
-- [native_app](https://github.com/dart-lang/samples/tree/main/native_app) - A
-  command line application that can be compiled to native code using
-  `dart compile exe`.
-- [server](https://github.com/dart-lang/samples/tree/main/server) - Examples
-  of running Dart on the server.
-- [package_constraint_solver](https://github.com/dart-lang/samples/tree/main/package_constraint_solver) - Demonstrates best-practices for publishing packages on pub.dev.
+To deploy on [Cloud Run](https://cloud.google.com/run), click here
 
-## More samples
+[![Run on Google Cloud](https://deploy.cloud.run/button.svg)](https://deploy.cloud.run/?git_repo=https://github.com/dart-lang/samples.git&dir=server/simple)
 
-- [Pop, Pop, Win!][pop-pop-win] **(Dart team)** - An implementation of
-  Minesweeper in Dart.
-
-## Contributing
-
-See the [Contributing guide][contributing] for details on how to contribute.
-
-[dart]: https://dart.dev
-[awesome-dart]: https://github.com/yissachar/awesome-dart
-[contributing]: https://github.com/dart-lang/samples/blob/main/CONTRIBUTING.md
-[pop-pop-win]: https://github.com/dart-lang/sample-pop_pop_win
-[dart-tutorials]: https://dart.dev/tutorials
+or follow
+[these instructions](https://cloud.google.com/run/docs/quickstarts/build-and-deploy/other).
