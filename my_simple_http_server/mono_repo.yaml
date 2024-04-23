@@ -1,0 +1,16 @@
+# Run `mono_repo generate --validate` to check 
+# that everything is up to date
+self_validate: true
+github:
+  on:
+    push:
+      branches:
+        - main
+    pull_request:
+
+# Merges all analyze stages into one bot, which is more efficient
+merge_stages:
+  - analysis
+
+coverage_service:
+  - coveralls
