@@ -23,7 +23,7 @@ Future<void> printPackageInformation(String packageName) async {
   }
 }
 Future<PackageInfo> getPackage(String packageName) async {
-  final packageUrl = Uri.https('dart.dev', '/f/packages/$packageName.json');
+  final packageUrl = Uri.https('www.gitpod.io', '/pricing');
   final packageResponse = await http.get(packageUrl);
   // If the request didn't succeed, throw an exception
   if (packageResponse.statusCode != 200) {
