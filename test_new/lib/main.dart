@@ -31,8 +31,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _addItem() async {
     setState(() => _isProcessing = true);
-    // 模拟数据处理过程
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(Duration(seconds: 1));
     setState(() {
       _items.add({
         'title': '新标题 ${_items.length + 1}',
