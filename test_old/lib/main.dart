@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-
+final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
 void main() {
   runApp(MyApp());
 }
-
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -18,37 +17,53 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
 class MyHomePage extends StatefulWidget {
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
-
 class _MyHomePageState extends State<MyHomePage> {
   final List<Map<String, dynamic>> _items = [];
   bool _isProcessing = false;
   Map<String, dynamic>? _selectedItem;
-
   void _addItem() async {
     setState(() => _isProcessing = true);
     await Future.delayed(Duration(seconds: 1));
+    final int index = _items.length;
+    Map<String, dynamic> newItem = {
+      'title': '新标题 ${index + 1}',
+      'content': '内容 ${index + 1}',
+      'fileimage': 'abacus',
+      'isChecked': false,
+    };
     setState(() {
-      _items.add({
-        'title': '新标题 ${_items.length + 1}',
-        'content': '内容 ${_items.length + 1}',
-        'fileimage': 'abacus',
-        'isChecked': false,
-      });
+      _items.insert(index, newItem);
       _isProcessing = false;
     });
+    _listKey.currentState?.insertItem(index);
   }
-
   void _deleteSelectedItems() {
-    setState(() {
-      _items.removeWhere((item) => item['isChecked']);
-    });
+    final List<int> checkedItems = _items.asMap().entries
+      .where((entry) => entry.value['isChecked'])
+      .map((entry) => entry.key)
+      .toList();
+    for (int index in checkedItems.reversed) {
+      var item = _items.removeAt(index);
+      _listKey.currentState?.removeItem(
+        index,
+        (context, animation) => SizeTransition(
+          sizeFactor: animation,
+          axisAlignment: 0.0,
+          child: CheckboxListTile(
+            title: Text(item['title']),
+            subtitle: Text(item['content']),
+            secondary: Icon(MdiIcons.fromString(item['fileimage'])),
+            value: item['isChecked'],
+            onChanged: null,
+          ),
+        ),
+      );
+    }
   }
-
   void _editItem(Map<String, dynamic> item) {
     TextEditingController titleController =
         TextEditingController(text: item['title']);
@@ -102,7 +117,6 @@ class _MyHomePageState extends State<MyHomePage> {
       },
     );
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -123,34 +137,34 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Stack(
         children: [
-          ListView.builder(
-            itemCount: _items.length,
-            itemBuilder: (context, index) {
+          AnimatedList(
+            key: _listKey,
+            initialItemCount: _items.length,
+            itemBuilder: (context, index, animation) {
               final item = _items[index];
-              return CheckboxListTile(
-                title: Text(item['title']),
-                subtitle: Text(item['content']),
-                secondary: Icon(MdiIcons.fromString(item['fileimage'])),
-                value: item['isChecked'],
-                onChanged: (bool? value) {
-                  setState(() {
-                    item['isChecked'] = value!;
-                    if (value == true) {
-                      _selectedItem = item;
-                    } else {
-                      if (_selectedItem == item) {
-                        _selectedItem = null;
+              return SizeTransition(
+                sizeFactor: animation,
+                child: CheckboxListTile(
+                  title: Text(item['title']),
+                  subtitle: Text(item['content']),
+                  secondary: Icon(MdiIcons.fromString(item['fileimage'])),
+                  value: item['isChecked'],
+                  onChanged: (bool? value) {
+                    setState(() {
+                      item['isChecked'] = value!;
+                      if (value == true) {
+                        _selectedItem = item;
+                      } else {
+                        if (_selectedItem == item) {
+                          _selectedItem = null;
+                        }
                       }
-                    }
-                  });
-                },
+                    });
+                  },
+                ),
               );
             },
-          ),
-          if (_isProcessing)
-            Center(
-              child: CircularProgressIndicator(),
-            ),
+          )
         ],
       ),
       floatingActionButton: FloatingActionButton(
