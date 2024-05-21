@@ -25,6 +25,21 @@ class _MyHomePageState extends State<MyHomePage> {
   final List<Map<String, dynamic>> _items = [];
   bool _isProcessing = false;
   Map<String, dynamic>? _selectedItem;
+  ScrollController _scrollController = ScrollController();
+  bool _showBackToTopButton = false;
+  double _scrollProgress = 0.0;
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(() {
+      final maxScroll = _scrollController.position.maxScrollExtent;
+      final currentScroll = _scrollController.offset;
+      setState(() {
+        _scrollProgress = (currentScroll / maxScroll * 100).clamp(0.0, 100.0);
+        _showBackToTopButton = _scrollProgress > 95.0;
+      });
+    });
+  }
   void _addItem() async {
     setState(() => _isProcessing = true);
     await Future.delayed(Duration(seconds: 1));
@@ -176,8 +191,42 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               );
             },
-          )
-        ],
+            controller: _scrollController,
+          ),
+          Positioned(
+            top: MediaQuery.of(context).padding.top,
+            left: MediaQuery.of(context).size.width * 0.5 - 50,
+            child: Offstage(
+              offstage: _scrollProgress <= 0.0 || _scrollProgress >= 100.0,
+              child: Card(
+                color: Colors.blue,
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text(
+                    '${_scrollProgress.toStringAsFixed(0)}%',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          if (_showBackToTopButton)
+          Positioned(
+            bottom: 20.0,
+            left: 20.0,
+            child: FloatingActionButton(
+              onPressed: () {
+                _scrollController.animateTo(
+                  0,
+                  duration: Duration(milliseconds: 500),
+                  curve: Curves.easeInOut,
+                );
+              },
+              child: Icon(Icons.arrow_upward),
+            ),
+          ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _addItem,
@@ -185,5 +234,10 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Icon(Icons.add),
       ),
     );
+  }
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 }
