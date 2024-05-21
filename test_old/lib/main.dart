@@ -227,6 +227,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Icon(Icons.arrow_upward),
             ),
           ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _addItem,
