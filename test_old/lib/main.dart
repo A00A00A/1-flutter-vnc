@@ -48,19 +48,28 @@ class _MyHomePageState extends State<MyHomePage> {
       .toList();
     for (int index in checkedItems.reversed) {
       var item = _items.removeAt(index);
-      _listKey.currentState?.removeItem(
+        _listKey.currentState?.removeItem(
         index,
-        (context, animation) => SizeTransition(
-          sizeFactor: animation,
-          axisAlignment: 0.0,
-          child: CheckboxListTile(
-            title: Text(item['title']),
-            subtitle: Text(item['content']),
-            secondary: Icon(MdiIcons.fromString(item['fileimage'])),
-            value: item['isChecked'],
-            onChanged: null,
-          ),
-        ),
+        (context, animation) {
+          return FadeTransition(
+            opacity: CurvedAnimation(
+              parent: animation,
+              curve: Interval(0.5, 1.0),
+            ),
+            child: SizeTransition(
+              sizeFactor: animation,
+              axisAlignment: 0.0,
+              child: CheckboxListTile(
+                title: Text(item['title']),
+                subtitle: Text(item['content']),
+                secondary: Icon(MdiIcons.fromString(item['fileimage'])),
+                value: item['isChecked'],
+                onChanged: null,
+              ),
+            ),
+          );
+        },
+        duration: Duration(milliseconds: 200),
       );
     }
   }
@@ -142,25 +151,28 @@ class _MyHomePageState extends State<MyHomePage> {
             initialItemCount: _items.length,
             itemBuilder: (context, index, animation) {
               final item = _items[index];
-              return SizeTransition(
-                sizeFactor: animation,
-                child: CheckboxListTile(
-                  title: Text(item['title']),
-                  subtitle: Text(item['content']),
-                  secondary: Icon(MdiIcons.fromString(item['fileimage'])),
-                  value: item['isChecked'],
-                  onChanged: (bool? value) {
-                    setState(() {
-                      item['isChecked'] = value!;
-                      if (value == true) {
-                        _selectedItem = item;
-                      } else {
-                        if (_selectedItem == item) {
-                          _selectedItem = null;
+              return FadeTransition(
+                opacity: animation,
+                child: SizeTransition(
+                  sizeFactor: animation,
+                  child: CheckboxListTile(
+                    title: Text(item['title']),
+                    subtitle: Text(item['content']),
+                    secondary: Icon(MdiIcons.fromString(item['fileimage'])),
+                    value: item['isChecked'],
+                    onChanged: (bool? value) {
+                      setState(() {
+                        item['isChecked'] = value!;
+                        if (value == true) {
+                          _selectedItem = item;
+                        } else {
+                          if (_selectedItem == item) {
+                            _selectedItem = null;
+                          }
                         }
-                      }
-                    });
-                  },
+                      });
+                    },
+                  ),
                 ),
               );
             },
